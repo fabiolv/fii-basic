@@ -102,11 +102,3 @@ if __name__ == "__main__":
 # //*[@id="basic-infos"]/div/div/div[2]/div/div[2]/ul/li[1]/div[2]/span[2]
 # //*[@id="basic-infos"]/div/div/div[2]/div/div[2]/ul/li[1]/div[2]/span[1]
 # //*[@id="basic-infos"]
-
-# scrap
-# parser = 'html.parser'
-
-# soup = BeatifulSoup(resp.content, parser)
-# basic_div = soup.select_one('div', '#basic-infos')
-# cnpj_span = basic_div.find('span', text='CNPJ')
-# cpnj_span_value = cnpj_span.findNext('span', {'class': 'description'}).get_text().strip()
