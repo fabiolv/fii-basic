@@ -80,6 +80,7 @@ def get_fii_info():
     resp.status_code = 200
     return resp
 
+@app.route('/testyf')
 def test_yf():
     url = 'https://yfstocks.herokuapp.com/quote/CSMG3?format=JSON&debug=0'
     resp = requests.get(url)
@@ -88,7 +89,7 @@ def test_yf():
 @app.route('/')
 def Hello():
     print('Request for /')
-    return test_yf()
+    return jsonify({'msg': 'Usage /fiibasic?ticker=TICKER'})
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
