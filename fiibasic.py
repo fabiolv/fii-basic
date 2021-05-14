@@ -1,5 +1,6 @@
 import os
 import requests
+import unicodedata
 from flask import Flask, json, jsonify, Request, Response, request
 from bs4 import BeautifulSoup
 
@@ -60,11 +61,14 @@ def get_fii_info():
 
     # Look for the name of the FII
     name_span = basic_div.find('span', text='Razão Social')
+    # The next element will be the description one
     name_span_value = name_span.find_next('span', {'class': 'description'}).get_text().strip()
+    # Remove the special chars from the FII name
+    # TODO: Need to find a better way to do it...
+    name_span_value = unicodedata.normalize('NFKD', name_span_value).encode('ASCII', 'ignore').decode('UTF-8')
     
     # Look for the span with text CNPJ
     cnpj_span = basic_div.find('span', text='CNPJ')
-    # The next element will be the description one
     cnpj_span_value = cnpj_span.find_next('span', {'class': 'description'}).get_text().strip()
 
     fii['ticker'] = param_ticker.upper()
@@ -75,6 +79,8 @@ def get_fii_info():
     out['msg'] = 'ok'
     out['error'] = False
     out['data'].append(fii)
+
+    # print(unicodedata.normalize('NFKD', name_span_value).encode('ASCII', 'ignore').decode('UTF-8'))
 
     resp = jsonify(out)
     resp.status_code = 200
