@@ -9,8 +9,8 @@ app.config['JSON_SORT_KEYS'] = False
 
 @app.route('/fii/<ticker>')
 def get_fii_info(ticker):
-    # param_ticker = str(request.args.get('ticker', default='', type=str))
     param_ticker = ticker
+
     fii = {
         'ticker': '',
         'name': '',
@@ -47,7 +47,7 @@ def get_fii_info(ticker):
         resp.status_code = html.status_code
         return resp
 
-    # Create the BS4 object
+    # Create the BS4 object from the HTML
     soup = BeautifulSoup(html.content, parser)
 
     # Use CSS selector to the the DIV with ID basic-infos
@@ -93,7 +93,7 @@ def test_yf():
     resp = requests.get(url)
     return resp.json()
 
-@app.route('/fii')
+@app.route('/fii/')
 @app.route('/')
 def Hello():
     print('Request for /')
