@@ -4,12 +4,13 @@ import unicodedata
 from flask import Flask, json, jsonify, Request, Response, request
 from bs4 import BeautifulSoup
 
-app = Flask(__name__, static_url_path='')
+app = Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False
 
-@app.route('/fiibasic')
-def get_fii_info():
-    param_ticker = str(request.args.get('ticker', default='', type=str))
+@app.route('/fii/<ticker>')
+def get_fii_info(ticker):
+    # param_ticker = str(request.args.get('ticker', default='', type=str))
+    param_ticker = ticker
     fii = {
         'ticker': '',
         'name': '',
@@ -92,15 +93,17 @@ def test_yf():
     resp = requests.get(url)
     return resp.json()
 
+@app.route('/fii')
 @app.route('/')
 def Hello():
     print('Request for /')
-    return jsonify({'msg': 'Usage /fiibasic?ticker=TICKER'})
+    return jsonify({'msg': 'Usage /fii/<TICKER>'})
+
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     print(f'Server running on http://localhost:{port}')
-    app.run(host='0.0.0.0', port=port, threaded=True)
+    app.run(host='0.0.0.0', port=port, threaded=True, debug=True)
 
 # https://fnet.bmfbovespa.com.br/fnet/publico/pesquisarGerenciadorDocumentosDados?d=19&s=0&l=10&o%5B0%5D%5BdataEntrega%5D=desc&tipoFundo=1&idCategoriaDocumento=6&idTipoDocumento=40&idEspecieDocumento=0&situacao=A&_=1620694438745
 # https://fnet.bmfbovespa.com.br/fnet/publico/pesquisarGerenciadorDocumentosDados?d=20&s=50&l=1&tipoFundo=1&idCategoriaDocumento=6&idTipoDocumento=40&idEspecieDocumento=0&situacao=A
