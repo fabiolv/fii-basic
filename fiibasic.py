@@ -21,7 +21,7 @@ def get_fii_info(ticker):
         'status_code': 0,
         'msg': None,
         'error': None,
-        'data': [],
+        'data': {},
     }
 
     if param_ticker == '':
@@ -79,7 +79,7 @@ def get_fii_info(ticker):
     out['status_code'] = 200
     out['msg'] = 'ok'
     out['error'] = False
-    out['data'].append(fii)
+    out['data'] = fii
 
     # print(unicodedata.normalize('NFKD', name_span_value).encode('ASCII', 'ignore').decode('UTF-8'))
 
