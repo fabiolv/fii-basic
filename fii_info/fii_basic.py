@@ -1,14 +1,12 @@
-# This whole file was replaced by a Flask app with Blueprints at the fii_info/ folder
-import os
 import requests
 import unicodedata
-from flask import Flask, json, jsonify, Request, Response, request
+from flask import jsonify, Blueprint
 from bs4 import BeautifulSoup
 
-app = Flask(__name__)
-app.config['JSON_SORT_KEYS'] = False
+# Builds the Blueprint for fii_basic
+fii_basic = Blueprint('fii_basic', __name__)
 
-@app.route('/fii/<ticker>')
+@fii_basic.route('/fiis/<ticker>')
 def get_fii_info(ticker):
     param_ticker = ticker
 
@@ -88,28 +86,14 @@ def get_fii_info(ticker):
     resp.status_code = 200
     return resp
 
-@app.route('/testyf')
+@fii_basic.route('/testyf')
 def test_yf():
     url = 'https://yfstocks.herokuapp.com/quote/CSMG3?format=JSON&debug=0'
     resp = requests.get(url)
     return resp.json()
 
-@app.route('/fii/')
-@app.route('/')
+@fii_basic.route('/fiis/')
+@fii_basic.route('/')
 def Hello():
     print('Request for /')
-    return jsonify({'msg': 'Usage /fii/<TICKER>'})
-
-
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    print(f'Server running on http://localhost:{port}')
-    app.run(host='0.0.0.0', port=port, threaded=True, debug=True)
-
-# https://fnet.bmfbovespa.com.br/fnet/publico/pesquisarGerenciadorDocumentosDados?d=19&s=0&l=10&o%5B0%5D%5BdataEntrega%5D=desc&tipoFundo=1&idCategoriaDocumento=6&idTipoDocumento=40&idEspecieDocumento=0&situacao=A&_=1620694438745
-# https://fnet.bmfbovespa.com.br/fnet/publico/pesquisarGerenciadorDocumentosDados?d=20&s=50&l=1&tipoFundo=1&idCategoriaDocumento=6&idTipoDocumento=40&idEspecieDocumento=0&situacao=A
-# https://fnet.bmfbovespa.com.br/fnet/publico/pesquisarGerenciadorDocumentosDados?d=24&s=0&l=10&o%5B0%5D%5BdataEntrega%5D=desc&tipoFundo=1&cnpjFundo=22219335000138&idCategoriaDocumento=6&idTipoDocumento=40&idEspecieDocumento=0&situacao=A&_=1620695190350
-#basic-infos > div > div > div.section-body > div > div:nth-child(2) > ul > li:nth-child(1) > div.text-wrapper > span.description
-# //*[@id="basic-infos"]/div/div/div[2]/div/div[2]/ul/li[1]/div[2]/span[2]
-# //*[@id="basic-infos"]/div/div/div[2]/div/div[2]/ul/li[1]/div[2]/span[1]
-# //*[@id="basic-infos"]
+    return jsonify({'msg': 'Usage /fiis/<TICKER>'})

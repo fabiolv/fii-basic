@@ -1,1 +1,1 @@
-web: python fiibasic.py
+web: flask run
