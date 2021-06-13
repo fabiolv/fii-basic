@@ -1,1 +1,1 @@
-web: flask run -p 5000
+web: flask run --port $PORT
