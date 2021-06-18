@@ -113,3 +113,35 @@ if __name__ == "__main__":
 # //*[@id="basic-infos"]/div/div/div[2]/div/div[2]/ul/li[1]/div[2]/span[2]
 # //*[@id="basic-infos"]/div/div/div[2]/div/div[2]/ul/li[1]/div[2]/span[1]
 # //*[@id="basic-infos"]
+
+# Pagina inicial do buscador de documentos
+# https://fnet.bmfbovespa.com.br/fnet/publico/pesquisarGerenciadorDocumentosCVM?paginaCertificados=false&tipoFundo=1
+
+
+# VSLH11
+# cnpj=36244015000142
+# https://fnet.bmfbovespa.com.br/fnet/publico/pesquisarGerenciadorDocumentosDados?d=3&s=0&l=10&o%5B0%5D%5BdataEntrega%5D=desc&tipoFundo=1&idCategoriaDocumento=6&idTipoDocumento=40&idEspecieDocumento=0&cnpj=36.244.015%2F0001-42&_=1623641348154&situacao=A
+
+# O endpoint pesquisarGerenciadorDocumentosDados pode ser usado para retornar as IDs dos documentos de um fundo
+# tem que usar o CNPJ do fundo para pesquisar
+# Usa a basic api para pegar o CNPJ dos FIIs
+# A partir da ID do documento do fundo (pelo CNPJ), da pra chamar a API https://fnet.bmfbovespa.com.br/fnet/publico/exibirDocumento?id=176738
+# e entao fazer webscrap para pegar os dados do documento
+# o ideal seria ter a API que gera os dados para exibirDocumento, mas nao achei
+
+# idCategoriaDocumento=6&idTipoDocumento=40 --> Categoria="Informes Periodicos" e Tipo="Informe Mensal"
+# Desses documentos daria para extrair Numero de Cotas*, Numero de Cotistas*, Valor Patrimonial por Cota*, Nome do Admin, CNPJ do Admin, Mes de Competencia (PK)*, Codigo ISIN, Classificao de Autorregulacao (mandato, segmento, tipo)
+
+# idCategoriaDocumento=14&idTipoDocumento=41 --> Categoria="Aviso aos Cotistas - Estruturado" e Tipo="Rendimentos e Amortizacoes"
+# Exemplo pro VSLH11 -> https://fnet.bmfbovespa.com.br/fnet/publico/pesquisarGerenciadorDocumentosDados?d=6&s=0&l=10&o%5B0%5D%5BdataEntrega%5D=desc&tipoFundo=1&idCategoriaDocumento=14&idTipoDocumento=41&idEspecieDocumento=0&situacao=A&cnpj=36.244.015%2F0001-42&_=1623642714007
+# Posso extrair o documento https://fnet.bmfbovespa.com.br/fnet/publico/exibirDocumento?id=182991&cvm=true
+# Esse documento possui os valores dos proventos, pode ter mais do que um documento de proventos por mes por causa das emissoes, entao é importante olhar o campo Codigo de Negociacao da Cota
+# Campos importantes: Codigo, data base, data pagamento, valor do provento, periodo de referencia
+
+# TODO
+# Ter um servico que, dado um ticker de um FII, retorne o nome e CNPJ (API do fii_basic --> /fiis/<ticker>/basic ou é um servico separado? Separado tem menos chance de quebrar)
+# Ter um servico que retorna os FNET ID PROVENTO de um TICKER em um determinado periodo (API docs)
+# Ter um servico que faz scraping dos documentos com FNET ID PROVENTO (API dividends)
+
+
+

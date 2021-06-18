@@ -2,9 +2,18 @@ import requests
 import unicodedata
 from flask import jsonify, Blueprint
 from bs4 import BeautifulSoup
+from kora.selenium import wd
 
 # Builds the Blueprint for fii_basic
 fii_basic = Blueprint('fii_basic', __name__)
+
+@fii_basic.route('/testkora/<id>')
+def kora(id):
+    url = f'http://fnet.bmfbovespa.com.br/fnet/publico/exibirDocumento?id={id}&cvm=true'
+
+    wd.get(url)
+
+    return wd.page_source
 
 @fii_basic.route('/fiis/<ticker>')
 def get_fii_info(ticker):

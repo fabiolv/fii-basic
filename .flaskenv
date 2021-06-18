@@ -1,4 +1,4 @@
-FLASK_APP=fii_info
+FLASK_APP=fii_basic
 FLASK_ENV=development
 THREADED=True
 THREADED=TRUE
