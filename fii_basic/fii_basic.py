@@ -12,6 +12,7 @@ def kora(id):
     url = f'http://fnet.bmfbovespa.com.br/fnet/publico/exibirDocumento?id={id}&cvm=true'
 
     wd.get(url)
+    
 
     return wd.page_source
 
