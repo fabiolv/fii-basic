@@ -15,6 +15,7 @@ def kora(id):
 
     print(f'Document id {id}')
     print(url)
+    print(wd.page_source)
 
     return wd.page_source
 
