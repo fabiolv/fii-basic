@@ -1,3 +1,4 @@
+from flask.wrappers import Response
 import requests
 import unicodedata
 from flask import jsonify, Blueprint
@@ -19,9 +20,29 @@ def kora(id):
 
     return wd.page_source
 
+def get_data_from_web(ticker):
+    url = f'https://www.fundsexplorer.com.br/funds/{ticker}'
+
+    # Get the html
+    html = requests.get(url)
+
+    return html
+
+def error_out(status_code: int, msg: str):
+    out = dict()
+
+    out['status_code'] = status_code
+    out['msg'] = msg
+    out['error'] = True
+
+    resp = jsonify(out)
+    resp.status_code = status_code
+
+    return resp
+
 @fii_basic.route('/fiis/<ticker>')
-def get_fii_info(ticker):
-    param_ticker = ticker
+def get_fii_info(ticker: str):
+    param_ticker = ticker.upper()
 
     fii = {
         'ticker': '',
@@ -44,33 +65,19 @@ def get_fii_info(ticker):
         resp.status_code = 400
         return resp
         
-
-    url = f'https://www.fundsexplorer.com.br/funds/{param_ticker.upper()}'
-    parser = 'html.parser'
-
-    # Get the html
-    html = requests.get(url)
+    html = get_data_from_web(param_ticker)
 
     if html.status_code != 200:
-        out['status_code'] = html.status_code
-        out['msg'] = f'Error retrieving the ticker {param_ticker}'
-        out['error'] = True
-        resp = jsonify(out)
-        resp.status_code = html.status_code
-        return resp
+        return error_out(html.status_code, f'Error retrieveing the ticker {param_ticker}')
 
     # Create the BS4 object from the HTML
+    parser = 'html.parser'
     soup = BeautifulSoup(html.content, parser)
 
     # Use CSS selector to the the DIV with ID basic-infos
     basic_div = soup.select_one('#basic-infos')
     if basic_div is None:
-        out['status_code'] = 400
-        out['msg'] = f'Error retrieving the basic info of the ticker {param_ticker} from {url}'
-        out['error'] = True
-        resp = jsonify(out)
-        resp.status_code = 400
-        return resp
+        return error_out(400, f'Error retrieving the basic info of the ticker {param_ticker} from {html.url}')
 
     # Look for the name of the FII
     name_span = basic_div.find('span', text='Razão Social')
@@ -99,14 +106,16 @@ def get_fii_info(ticker):
     resp.status_code = 200
     return resp
 
-@fii_basic.route('/testyf')
-def test_yf():
-    url = 'https://yfstocks.herokuapp.com/quote/CSMG3?format=JSON&debug=0'
+@fii_basic.route('/quote/<ticker>')
+def quote(ticker):
+    if ticker == '':
+        return jsonify({'msg': 'Ticker not provided'})
+    
+    url = f'https://yfstocks.herokuapp.com/quote/{ticker}?format=JSON&debug=1'
     resp = requests.get(url)
     return resp.json()
 
-@fii_basic.route('/fiis/')
-@fii_basic.route('/')
-def Hello():
-    print('Request for /')
+@fii_basic.route('/fiis')
+def root():
+    print('Request for /fiis')
     return jsonify({'msg': 'Usage /fiis/<TICKER>'})

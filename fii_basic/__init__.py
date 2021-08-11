@@ -1,5 +1,6 @@
 from flask import Flask
 from .fii_basic import fii_basic
+from .fii_root import fii_root
 
 def create_app():
     app = Flask(__name__)
@@ -8,5 +9,6 @@ def create_app():
     # app.config.from_object(config_object)
 
     app.register_blueprint(fii_basic)
+    app.register_blueprint(fii_root)
 
     return app
