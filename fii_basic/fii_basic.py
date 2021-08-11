@@ -34,6 +34,7 @@ def error_out(status_code: int, msg: str):
     out['status_code'] = status_code
     out['msg'] = msg
     out['error'] = True
+    out['data'] = {}
 
     resp = jsonify(out)
     resp.status_code = status_code
@@ -68,7 +69,7 @@ def get_fii_info(ticker: str):
     html = get_data_from_web(param_ticker)
 
     if html.status_code != 200:
-        return error_out(html.status_code, f'Error retrieveing the ticker {param_ticker}')
+        return error_out(html.status_code, f'Error while retrieveing the ticker {param_ticker}')
 
     # Create the BS4 object from the HTML
     parser = 'html.parser'
@@ -77,7 +78,7 @@ def get_fii_info(ticker: str):
     # Use CSS selector to the the DIV with ID basic-infos
     basic_div = soup.select_one('#basic-infos')
     if basic_div is None:
-        return error_out(400, f'Error retrieving the basic info of the ticker {param_ticker} from {html.url}')
+        return error_out(400, f'Error while retrieving the basic info of the ticker {param_ticker} from {html.url}')
 
     # Look for the name of the FII
     name_span = basic_div.find('span', text='Razão Social')
