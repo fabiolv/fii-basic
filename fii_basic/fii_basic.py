@@ -10,7 +10,7 @@ fii_basic = Blueprint('fii_basic', __name__)
 
 @fii_basic.route('/testkora/<id>')
 def kora(id):
-    url = f'http://fnet.bmfbovespa.com.br/fnet/publico/exibirDocumento?id={id}&cvm=true'
+    url = F'http://fnet.bmfbovespa.com.br/fnet/publico/exibirDocumento?id={id}&cvm=true'
 
     wd.get(url)
 
