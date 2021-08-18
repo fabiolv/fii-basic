@@ -1,3 +1,4 @@
+import unicodedata
 from flask.wrappers import Response
 from urllib.parse import urlencode, quote_plus
 from kora.selenium import wd
@@ -67,7 +68,9 @@ def get_fnet_doc_content(id:str) -> str:
     url = F'http://fnet.bmfbovespa.com.br/fnet/publico/exibirDocumento?id={id}&cvm=true'
 
     wd.get(url)
+
     html = wd.page_source
+    html = unicodedata.normalize('NFKD', html).encode('ASCII', 'ignore').decode('UTF-8')
 
     return html
 
