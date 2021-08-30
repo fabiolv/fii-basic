@@ -2,6 +2,7 @@ from flask import Flask
 from .fii_basic import fii_basic
 from .fii_root import fii_root
 from .fii_fnet_monthly import fii_fnet_monthly
+from .fii_fnet_dividends import fii_fnet_dividend
 
 def create_app():
     app = Flask(__name__)
@@ -12,5 +13,6 @@ def create_app():
     app.register_blueprint(fii_basic)
     app.register_blueprint(fii_root)
     app.register_blueprint(fii_fnet_monthly)
+    app.register_blueprint(fii_fnet_dividend)
 
     return app
