@@ -6,4 +6,8 @@ fii_root = Blueprint('fii_root', __name__)
 @fii_root.route('/')
 def root():
     print('Request for /')
-    return jsonify({'msg': 'Usage /fiis/<TICKER>'})
+    return jsonify({'endpoints':[ 
+        '/fiis/<TICKER>'
+        ]
+    }
+    )
